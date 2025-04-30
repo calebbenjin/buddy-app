@@ -1,0 +1,163 @@
+// src/features/auth/components/LoginForm.tsx
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useState } from "react";
+import { Input } from "./ui/Input";
+import Button from "./ui/Button";
+import { IoMail } from "react-icons/io5";
+import { FaCheck } from "react-icons/fa6";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import GetHelpButton from "./GetHelpButton";
+
+const loginSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
+
+export default function LoginForm() {
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const emailValue = watch("email");
+  const passwordValue = watch("password");
+
+  const onSubmit = async (data: LoginFormValues) => {
+    setLoading(true);
+    // Handle login logic here (call API)
+    console.log("Login submitted:", data);
+    setTimeout(() => setLoading(false), 1000);
+  };
+
+  return (
+    <>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full max-w-md mx-auto bg-white py-6 px-8 rounded-lg shadow-2xl border border-gray-200"
+      >
+        <h2 className="text-2xl font-semibold">Log in to your account</h2>
+        <p className="mt-1 text-sm">
+          Proceed to create account and setup your organization
+        </p>
+
+        <div className="space-y-4 mt-8">
+          <div className="flex flex-col">
+            <label htmlFor="email" className="text-gray-600 text-sm">
+              Email
+            </label>
+            <div className="relative">
+              <IoMail className="absolute top-3 left-3 h-5 w-5 text-gray-400" />
+              <Input
+                type="email"
+                placeholder="Email"
+                maxLength={60}
+                {...register("email")}
+                className={`w-full px-4 py-4 border rounded-md focus:outline-none pl-9 ${
+                  errors.email ? "border-[#FF8600]" : "border-gray-200"
+                }`}
+              />
+              {!errors.email && emailValue && (
+                <FaCheck className="absolute top-3 right-5 h-4 w-4 text-green-700" />
+              )}
+              <p className="absolute right-2 bottom-[-18px] text-xs text-gray-400">
+                {emailValue?.length || 0} / 60
+              </p>
+            </div>
+            {errors.email && (
+              <small className="text-xs text-orange-500 mt-1">
+                {errors.email.message}
+              </small>
+            )}
+          </div>
+
+          <div className="flex flex-col mb-8">
+            <label htmlFor="password" className="text-gray-600 text-sm">
+              Password
+            </label>
+            <div className="relative">
+              <img
+                src="/lock-icon.svg"
+                alt="Lock Icon"
+                className="absolute top-3 left-3 h-5 w-5 text-gray-400"
+              />
+              <Input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                maxLength={15}
+                {...register("password")}
+                className={`w-full px-4 py-4 border rounded-md focus:outline-none pl-9 pr-12 ${
+                  errors.password ? "border-[#FF8600]" : "border-gray-200"
+                }`}
+              />
+              {showPassword ? (
+                <FaEye
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute top-3 right-3 h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
+              ) : (
+                <FaEyeSlash
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute top-3 right-3 h-5 w-5 text-gray-400 cursor-pointer"
+                  aria-hidden="true"
+                />
+              )}
+              <p className="absolute right-2 bottom-[-18px] text-xs text-gray-400 cursor-pointer">
+                {passwordValue?.length || 0} / 15
+              </p>
+            </div>
+            {errors.password && (
+              <small className="text-xs text-[#FF8600] mt-1">
+                {errors.password.message}
+              </small>
+            )}
+          </div>
+
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-gray-200 hover:bg-[#FF8600] rounded-md"
+          >
+            {loading ? "Logging in..." : "Login"}
+          </Button>
+
+          <div className="text-xs text-gray-500 mt-4 pb-6">
+            By clicking the button above, you agree to our
+            <Link to="/" className="text-[#FF8600]">
+              {" "}
+              Terms of Service{" "}
+            </Link>
+            and{" "}
+            <Link to="/" className="text-[#FF8600]">
+              Privacy Policy
+            </Link>
+            .
+          </div>
+
+          <p className="text-sm">
+            Don&apos;t have an account?{" "}
+            <Link
+              to="/auth/register"
+              className="text-[#FF8600] hover:text-[#FF8600] hover:font-bold font-medium"
+            >
+              Register
+            </Link>
+          </p>
+        </div>
+      </form>
+      <GetHelpButton />
+    </>
+  );
+}

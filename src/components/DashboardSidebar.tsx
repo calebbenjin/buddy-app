@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Link } from "react-router-dom";
 import { LuUserRound, LuUsersRound } from "react-icons/lu";
 import { TfiEmail } from "react-icons/tfi";
@@ -6,7 +6,6 @@ import { CiSettings } from "react-icons/ci";
 import { HiOutlineCurrencyDollar } from "react-icons/hi2";
 import { MdOutlineShowChart } from "react-icons/md";
 import { FiLogOut } from "react-icons/fi";
-import Button from "./ui/Button";
 
 const navItems = [
   {
@@ -44,7 +43,7 @@ const DashboardSidebar = () => {
   };
 
   return (
-    <aside className="w-64 h-screen bg-white border-transparent hidden md:flex flex-col justify-between fixed top-0 left-0 z-20">
+    <aside className="w-64 h-screen bg-white border-transparent hidden lg:flex flex-col justify-between sticky top-0 z-20">
       <div>
         <div className="p-6">
           <img

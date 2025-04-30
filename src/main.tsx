@@ -7,6 +7,7 @@ import RegisterPage from "./pages/auth/register";
 import App from "./App";
 import VerifyEmail from "./pages/auth/verify-email";
 import EmailVerified from "./pages/auth/email-verified";
+import Dashboard from "./pages/dashboard";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
@@ -14,6 +15,7 @@ const router = createBrowserRouter([
   { path: "/auth/register", element: <RegisterPage /> },
   { path: "/auth/verify-email", element: <VerifyEmail /> },
   { path: "/auth/email-verified", element: <EmailVerified /> },
+  { path: "/dashboard", element: <Dashboard /> },
 ]);
 
 createRoot(document.getElementById("root")!).render(

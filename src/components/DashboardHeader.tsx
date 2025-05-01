@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { FaRegBell } from "react-icons/fa";
 import { GoPlus } from "react-icons/go";
 import { CiSearch } from "react-icons/ci";
@@ -8,7 +9,7 @@ import { FiMenu } from "react-icons/fi";
 import { Input } from "./ui/Input";
 
 interface DashboardHeaderProps {
-  onToggleSidebar?: () => void; // optional sidebar toggle function
+  onToggleSidebar?: () => void;
 }
 
 const DashboardHeader: React.FC<DashboardHeaderProps> = ({
@@ -16,12 +17,20 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 }) => {
   const [scrolled, setScrolled] = useState(false);
   const [showSearchInput, setShowSearchInput] = useState(false);
+  const location = useLocation();
+
+  const getPageTitle = () => {
+    const path = location.pathname;
+    if (path.includes("messages")) return "Messages";
+    if (path.includes("analytics")) return "Analytics";
+    if (path.includes("settings")) return "Settings";
+    if (path.includes("group")) return "My Group";
+    if (path.includes("pack")) return "My Pack";
+    return "My Portfolio";
+  };
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -32,7 +41,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         scrolled ? "bg-white shadow" : "bg-transparent"
       }`}
     >
-      {/* Left: Sidebar Toggle on Mobile */}
+      {/* Left: Page Title & Mobile Toggle */}
       <div className="flex items-center gap-4">
         <button
           className="block md:hidden text-gray-800"
@@ -40,13 +49,13 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         >
           <FiMenu size={24} />
         </button>
-        <h2 className="lg:text-xl text-base font-bold">My Portfolio</h2>
+        <h2 className="lg:text-xl text-base font-bold">{getPageTitle()}</h2>
       </div>
 
-      {/* Right: Actions */}
+      {/* Right: Search and Icons */}
       <div className="flex items-center justify-end gap-x-4 lg:w-4/12">
-        {/* Search */}
         <div className="relative">
+          {/* Desktop Search */}
           <div className="hidden md:block w-full max-w-[300px] relative">
             <CiSearch className="absolute top-3 left-3 h-5 w-5 text-gray-800" />
             <Input
@@ -56,7 +65,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             />
           </div>
 
-          {/* Mobile search */}
+          {/* Mobile Search */}
           <div className="md:hidden">
             {showSearchInput ? (
               <div className="relative">

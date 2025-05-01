@@ -1,5 +1,5 @@
 
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { LuUserRound, LuUsersRound } from "react-icons/lu";
 import { TfiEmail } from "react-icons/tfi";
 import { CiSettings } from "react-icons/ci";
@@ -15,28 +15,30 @@ const navItems = [
   },
   {
     title: "My Group",
-    href: "/dashboard",
+    href: "/dashboard/my-group",
     icon: <LuUsersRound size={23} />,
   },
   { title: "Messages", href: "/dashboard/messages", icon: <TfiEmail /> },
   {
     title: "Analytics",
-    href: "/dashboard",
+    href: "/dashboard/analytics",
     icon: <MdOutlineShowChart size={23} />,
   },
   {
     title: "Pack",
-    href: "/dashboard",
+    href: "/dashboard/pack",
     icon: <HiOutlineCurrencyDollar size={23} />,
   },
   {
     title: "Settings",
-    href: "/dashboard",
+    href: "/dashboard/settings",
     icon: <CiSettings size={23} />,
   },
 ];
 
 const DashboardSidebar = () => {
+  const location = useLocation(); // ✅ current route
+
   const handleLogout = () => {
     // logic here
     console.log("Logged out!");
@@ -55,20 +57,31 @@ const DashboardSidebar = () => {
           />
         </div>
         <nav className="flex flex-col space-y-2 pr-4 mt-8">
-          {navItems.map((item, idx) => (
-            <div
-              key={idx}
-              className="hover:border-l-4 border-orange-600 pl-4 transition duration-200 ease-in-out rounded"
-            >
-              <Link
-                to={item.href}
-                className="flex items-center gap-3 px-3 py-3 text-sm rounded-xl hover:bg-white hover:shadow-xl hover:border hover:border-gray-100 text-[#818187] border border-transparent transition duration-200 ease-in-out"
+          {navItems.map((item, idx) => {
+            const isActive = location.pathname === item.href;
+            return (
+              <div
+                key={idx}
+                className={`pl-4 transition duration-200 ease-in-out rounded ${
+                  isActive
+                    ? "border-l-4 border-orange-600 bg-white"
+                    : "hover:border-l-4 border-transparent hover:border-orange-600"
+                }`}
               >
-                {item.icon}
-                {item.title}
-              </Link>
-            </div>
-          ))}
+                <Link
+                  to={item.href}
+                  className={`flex items-center gap-3 px-3 py-3 text-sm rounded-xl border transition duration-200 ease-in-out ${
+                    isActive
+                      ? "bg-white text-orange-600 shadow border-white"
+                      : "text-[#818187] hover:bg-white hover:shadow-xl hover:border hover:border-gray-100 border-transparent"
+                  }`}
+                >
+                  {item.icon}
+                  {item.title}
+                </Link>
+              </div>
+            );
+          })}
         </nav>
       </div>
 

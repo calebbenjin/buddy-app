@@ -13,6 +13,10 @@ import SettingPage from "./pages/dashboard/settings";
 import PackPage from "./pages/dashboard/pack";
 import MyGroupPage from "./pages/dashboard/my-group";
 import AnalyticsPage from "./pages/dashboard/analytics";
+import ProtectedRoute from "./store/services/auth/ProtectedRoute";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
+import { ToastContainer, toast } from "react-toastify";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
@@ -20,16 +24,61 @@ const router = createBrowserRouter([
   { path: "/auth/register", element: <RegisterPage /> },
   { path: "/auth/verify-email", element: <VerifyEmail /> },
   { path: "/auth/email-verified", element: <EmailVerified /> },
-  { path: "/dashboard", element: <Dashboard /> },
-  { path: "/dashboard/settings", element: <SettingPage /> },
-  { path: "/dashboard/pack", element: <PackPage /> },
-  { path: "/dashboard/analytics", element: <AnalyticsPage /> },
-  { path: "/dashboard/my-group", element: <MyGroupPage /> },
-  { path: "/dashboard/messages", element: <MessagesPage /> },
+  {
+    path: "/dashboard",
+    element: (
+      <ProtectedRoute>
+        <Dashboard />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/dashboard/settings",
+    element: (
+      <ProtectedRoute>
+        <SettingPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/dashboard/pack",
+    element: (
+      <ProtectedRoute>
+        <PackPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/dashboard/analytics",
+    element: (
+      <ProtectedRoute>
+        <AnalyticsPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/dashboard/my-group",
+    element: (
+      <ProtectedRoute>
+        <MyGroupPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/dashboard/messages",
+    element: (
+      <ProtectedRoute>
+        <MessagesPage />
+      </ProtectedRoute>
+    ),
+  },
 ]);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <ToastContainer />
+      <RouterProvider router={router} />
+    </Provider>
   </StrictMode>
 );

@@ -1,3 +1,4 @@
+import { chartData } from "@/utils/constant";
 import React, { useState } from "react";
 import {
   BarChart,
@@ -11,21 +12,6 @@ import {
 } from "recharts";
 
 const brokers = ["Robbin Hood", "Amreitrade", "Fidelity", "Charles"];
-
-const data = [
-  { name: "JAN", value: 650 },
-  { name: "FEB", value: 350 },
-  { name: "MAR", value: 600 },
-  { name: "APR", value: 370 },
-  { name: "MAY", value: 500 },
-  { name: "JUN", value: 850 }, // Highlighted month
-  { name: "JUL", value: 580 },
-  { name: "AUG", value: 610 },
-  { name: "SEP", value: 450 },
-  { name: "OCT", value: 720 },
-  { name: "NOV", value: 390 },
-  { name: "DEC", value: 600 },
-];
 
 const highlightedMonth = "JUN";
 
@@ -57,7 +43,7 @@ const OverviewChart: React.FC = () => {
       {/* Chart */}
       <div className="w-full h-[250px] md:h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data}>
+          <BarChart data={chartData}>
             <CartesianGrid vertical={false} strokeDasharray="3 3" />
             <XAxis dataKey="name" tick={{ fill: "#666", fontSize: 12 }} />
             <YAxis
@@ -71,7 +57,7 @@ const OverviewChart: React.FC = () => {
               radius={[4, 4, 0, 0]}
               background={{ fill: "#F3F4F6" }}
             >
-              {data.map((entry, index) => (
+              {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
                   fill={

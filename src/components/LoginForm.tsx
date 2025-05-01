@@ -8,8 +8,12 @@ import Button from "./ui/Button";
 import { IoMail } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa6";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import GetHelpButton from "./GetHelpButton";
+import { useDispatch } from "react-redux";
+import { setAuth } from "@/store/services/auth/authSlice";
+import { useLoginMutation } from "@/store/services/api/authApi";
+import { toast } from "react-toastify";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -19,8 +23,10 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
+  const [login, { isLoading }] = useLoginMutation();
 
   const {
     register,
@@ -35,10 +41,14 @@ export default function LoginForm() {
   const passwordValue = watch("password");
 
   const onSubmit = async (data: LoginFormValues) => {
-    setLoading(true);
-    // Handle login logic here (call API)
-    console.log("Login submitted:", data);
-    setTimeout(() => setLoading(false), 1000);
+    try {
+      const res = await login(data).unwrap();
+      const { token, user } = res?.data;
+      dispatch(setAuth({ token, user }));
+      navigate("/dashboard");
+    } catch (error: any) {
+      toast.error(error?.data.message);
+    }
   };
 
   return (
@@ -127,10 +137,10 @@ export default function LoginForm() {
 
           <Button
             type="submit"
-            disabled={loading}
-            className="w-full bg-gray-200 hover:bg-[#FF8600] rounded-md"
+            disabled={isLoading}
+            className="w-full bg-[#FF8600] focus:bg-[#FF8600] rounded-md"
           >
-            {loading ? "Logging in..." : "Login"}
+            {isLoading ? "Logging in..." : "Login"}
           </Button>
 
           <div className="text-xs text-gray-500 mt-4 pb-6">

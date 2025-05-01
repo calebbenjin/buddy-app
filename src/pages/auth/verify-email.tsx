@@ -1,20 +1,23 @@
 import OtpVerification from "@/components/OtpVerification";
 import AuthLayout from "@/layouts/AuthLayout";
+import { useVerifyOtpMutation } from "@/store/services/api/authApi";
+import { useEffect, useState } from "react";
 
 const VerifyEmail = () => {
   const handleResend = () => {};
 
-  const handleSubmit = (otp: string) => {
-    console.log("OTP submitted:", otp);
-  };
+  const [email, setEmail] = useState<string>("");
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("pending_email");
+    if (savedEmail) {
+      setEmail(savedEmail);
+    }
+  }, []);
 
   return (
     <AuthLayout>
-      <OtpVerification
-        email="calebben@gmail.com"
-        onSubmit={handleSubmit}
-        onResend={handleResend}
-      />
+      <OtpVerification email={email} />
     </AuthLayout>
   );
 };

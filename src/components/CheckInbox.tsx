@@ -1,9 +1,13 @@
 import Button from "./ui/Button";
 import { Link, useNavigate } from "react-router-dom";
 
-const CheckInbox = () => {
+interface CheckInboxProps {
+  email: string;
+}
+
+const CheckInbox = ({ email }: CheckInboxProps) => {
   const navigate = useNavigate();
-  
+
   const handleResend = () => {
     navigate("/auth/verify-email");
   };
@@ -20,7 +24,7 @@ const CheckInbox = () => {
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold">Check your mailbox !</h2>
         <p className="mt-1 text-sm">
-          We’ve sent an email to seyi@zojatech.com with a an OTP to confirm your
+          We’ve sent an email to <b>{email}</b> with a an OTP to confirm your
           account. Check your inbox to activate your account.
         </p>
         <Link to="/auth/verify-email">
@@ -30,7 +34,12 @@ const CheckInbox = () => {
 
       <div className="flex items-center justify-center mt-4 mb-6">
         <p className="text-sm">Did't get the mail?</p>
-        <Button type="button" variant="ghost" onClick={handleResend} className="text-sm ">
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={handleResend}
+          className="text-sm "
+        >
           Resend
         </Button>
       </div>

@@ -8,24 +8,32 @@ import Button from "./ui/Button";
 import { IoMail } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa6";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import GetHelpButton from "./GetHelpButton";
 import { FaUser } from "react-icons/fa";
 import CheckInbox from "./CheckInbox";
+import { useSignupMutation } from "@/store/services/api/authApi";
+import { toast } from "react-toastify";
 
 const registerSchema = z.object({
-  firstName: z.string().min(2, "First name is required"),
-  lastName: z.string().min(2, "Last name is required"),
+  first_name: z.string().min(2, "First name is required"),
+  last_name: z.string().min(2, "Last name is required"),
   email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters long"),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters long")
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/,
+      "Password must contain at least one uppercase, one lowercase letter, and one number"
+    ),
 });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function RegisterForm() {
-  const [loading, setLoading] = useState(false);
+  const [signup, { isLoading }] = useSignupMutation();
   const [showPassword, setShowPassword] = useState(false);
-  const [confirmEmail, setConfirmEmail] = useState(false);
+  const [confirmEmail, setConfirmEmail] = useState("");
 
   const {
     register,
@@ -40,16 +48,23 @@ export default function RegisterForm() {
   const passwordValue = watch("password");
 
   const onSubmit = async (data: RegisterFormValues) => {
-    setLoading(true);
-    console.log("Login submitted:", data);
-    setConfirmEmail(true);
-    setTimeout(() => setLoading(false), 1000);
+    try {
+      await signup({
+        ...data,
+        first_name: data.first_name,
+        last_name: data.last_name,
+      }).unwrap();
+      setConfirmEmail(data?.email);
+      localStorage.setItem("pending_email", data.email); // ✅ Save email
+    } catch (error: any) {
+      toast.error(error?.data.message);
+    }
   };
 
   return (
     <>
       {confirmEmail ? (
-        <CheckInbox />
+        <CheckInbox email={confirmEmail} />
       ) : (
         <>
           <form
@@ -64,50 +79,52 @@ export default function RegisterForm() {
             <div className="space-y-4 mt-8">
               <div className="grid lg:grid-cols-2 gap-4">
                 <div className="flex flex-col w-full">
-                  <label htmlFor="firstName" className="text-gray-600 text-sm">
+                  <label htmlFor="first_name" className="text-gray-600 text-sm">
                     First Name
                   </label>
                   <div className="relative">
                     <FaUser className="absolute top-3 left-3 h-4 w-4 text-gray-400" />
                     <Input
                       type="text"
-                      id="firstName"
+                      id="first_name"
                       placeholder="First Name"
-                      {...register("firstName")}
+                      {...register("first_name")}
                       className={`w-full px-4 py-4 border pl-9 rounded-md focus:outline-none ${
-                        errors.firstName
+                        errors.first_name
                           ? "border-[#FF8600]"
                           : "border-gray-200"
                       }`}
                     />
                   </div>
 
-                  {errors.firstName && (
+                  {errors.first_name && (
                     <small className="text-xs text-orange-500 mt-1">
-                      {errors.firstName.message}
+                      {errors.first_name.message}
                     </small>
                   )}
                 </div>
                 <div className="flex flex-col w-full">
-                  <label htmlFor="lastName" className="text-gray-600 text-sm">
+                  <label htmlFor="last_name" className="text-gray-600 text-sm">
                     Last Name
                   </label>
                   <div className="relative">
                     <FaUser className="absolute top-3 left-3 h-4 w-4 text-gray-400" />
                     <Input
                       type="text"
-                      id="lastName"
+                      id="last_name"
                       placeholder="Last Name"
-                      {...register("lastName")}
+                      {...register("last_name")}
                       className={`w-full px-4 py-4 border pl-9 rounded-md focus:outline-none ${
-                        errors.lastName ? "border-[#FF8600]" : "border-gray-200"
+                        errors.last_name
+                          ? "border-[#FF8600]"
+                          : "border-gray-200"
                       }`}
                     />
                   </div>
 
-                  {errors.lastName && (
+                  {errors.last_name && (
                     <small className="text-xs text-orange-500 mt-1">
-                      {errors.lastName.message}
+                      {errors.last_name.message}
                     </small>
                   )}
                 </div>
@@ -189,10 +206,10 @@ export default function RegisterForm() {
 
               <Button
                 type="submit"
-                disabled={loading}
-                className="w-full text-gray-800 bg-gray-200 hover:bg-[#FF8600] rounded-md"
+                disabled={isLoading}
+                className="w-full text-gray-800 bg-[#FF8600] focus:bg-[#FF8600] rounded-md"
               >
-                {loading ? "Creating..." : "Create account"}
+                {isLoading ? "Creating..." : "Create account"}
               </Button>
 
               <div className="text-xs text-gray-500 mt-4 pb-6">

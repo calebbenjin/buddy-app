@@ -7,17 +7,15 @@ import { GoPlus } from "react-icons/go";
 import { CiSearch } from "react-icons/ci";
 import { FiMenu } from "react-icons/fi";
 import { Input } from "./ui/Input";
+import { useDispatch } from "react-redux";
+import { toggleSidebar } from "@/store/slices/sidebarSlice";
 
-interface DashboardHeaderProps {
-  onToggleSidebar?: () => void;
-}
-
-const DashboardHeader: React.FC<DashboardHeaderProps> = ({
-  onToggleSidebar,
-}) => {
+const DashboardHeader = () => {
   const [scrolled, setScrolled] = useState(false);
   const [showSearchInput, setShowSearchInput] = useState(false);
   const location = useLocation();
+
+  const dispatch = useDispatch();
 
   const getPageTitle = () => {
     const path = location.pathname;
@@ -37,7 +35,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
   return (
     <header
-      className={`w-full py-4 px-6 flex justify-between items-center sticky top-0 z-50 transition-colors duration-300 ${
+      className={`w-full py-4 px-6 flex justify-between items-center sticky top-0 z-20 transition-colors duration-300 ${
         scrolled ? "bg-white shadow" : "bg-transparent"
       }`}
     >
@@ -45,7 +43,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
       <div className="flex items-center gap-4">
         <button
           className="block md:hidden text-gray-800"
-          onClick={onToggleSidebar}
+          onClick={() => dispatch(toggleSidebar())}
         >
           <FiMenu size={24} />
         </button>

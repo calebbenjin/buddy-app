@@ -1,54 +1,61 @@
-# React + TypeScript + Vite
+# 📊 Buddy Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive dashboard application built with React, Redux Toolkit, and Tailwind CSS. This platform includes authentication, protected routes, and chat functionality with file previews.
 
-Currently, two official plugins are available:
+## My blocker
+I noticed that the registration process does not trigger an OTP to be sent. As a workaround, I simulated the process — meaning during signup, you can enter any number as the OTP and it will be accepted.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Additionally, since there's no provided mobile design, I prioritized making the main dashboard view responsive, while temporarily excluding the chat screen from mobile responsiveness.
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## 🚀 Features
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- User Authentication with OTP verification
+- Protected Routes
+- Redux Toolkit with RTK Query for API integration
+- Chat UI with file preview (PDF/Image)
+- Mobile sidebar with overlay and toggle
+- Lazy-loaded routes and components
+- Fully responsive dashboard layout
+- Toast notifications for user feedback
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## 🛠 Tech Stack
+
+| Category          | Tech                     |
+|-------------------|--------------------------|
+| Frontend          | React + TypeScript       |
+| Styling           | Tailwind CSS             |
+| Routing           | React Router DOM         |
+| State Management  | Redux Toolkit            |
+| Data Fetching     | RTK Query (Redux Toolkit)|
+| Form Handling     | React Hook Form + Zod    |
+| Notifications     | React Toastify           |
+| Icons             | React Icons              |
+| Code Splitting    | React.lazy + Suspense    |
+| Session Storage   | `sessionStorage`         |
+
+---
+
+## 📦 Getting Started
+
+## View the live demo 
+https://buddy-app-fd3h.vercel.app/dashboard
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/calebbenjin/buddy-app.git
+cd buddy-app
+
+
+
+
+npm install
+# or
+yarn install
+
+

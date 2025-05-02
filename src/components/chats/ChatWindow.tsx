@@ -1,12 +1,19 @@
-
-import { useState, useRef, useEffect, SetStateAction } from "react";
-import ChatHeader from "@/components/chats/ChatHeader";
-import SidebarHeader from "@/components/chats/SidebarHeader";
-import MessageInput from "@/components/chats/MessageInput";
-import ContactList from "@/components/chats/ContactList";
-import MessageList from "@/components/chats/MessageList";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  SetStateAction,
+  lazy,
+} from "react";
 import { contacts, currentUser, messagesData } from "@/utils/constant";
 import SearchBar from "./Searchbar";
+
+// Lazy-loaded components
+const ChatHeader = lazy(() => import("@/components/chats/ChatHeader"));
+const SidebarHeader = lazy(() => import("@/components/chats/SidebarHeader"));
+const MessageInput = lazy(() => import("@/components/chats/MessageInput"));
+const ContactList = lazy(() => import("@/components/chats/ContactList"));
+const MessageList = lazy(() => import("@/components/chats/MessageList"));
 
 // Main App Component
 export default function ChatWindow() {

@@ -1,22 +1,25 @@
-import { StrictMode } from "react";
+
+import { StrictMode, lazy } from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import LoginPage from "./pages/auth/LoginPage";
-import RegisterPage from "./pages/auth/register";
-import App from "./App";
-import VerifyEmail from "./pages/auth/verify-email";
-import EmailVerified from "./pages/auth/email-verified";
-import Dashboard from "./pages/dashboard";
-import MessagesPage from "./pages/dashboard/messages";
-import SettingPage from "./pages/dashboard/settings";
-import PackPage from "./pages/dashboard/pack";
-import MyGroupPage from "./pages/dashboard/my-group";
-import AnalyticsPage from "./pages/dashboard/analytics";
+import "./index.css";
 import ProtectedRoute from "./store/services/auth/ProtectedRoute";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+
+// Lazy imports
+const App = lazy(() => import("./App"));
+const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
+const RegisterPage = lazy(() => import("./pages/auth/register"));
+const VerifyEmail = lazy(() => import("./pages/auth/verify-email"));
+const EmailVerified = lazy(() => import("./pages/auth/email-verified"));
+const Dashboard = lazy(() => import("./pages/dashboard"));
+const MessagesPage = lazy(() => import("./pages/dashboard/messages"));
+const SettingPage = lazy(() => import("./pages/dashboard/settings"));
+const PackPage = lazy(() => import("./pages/dashboard/pack"));
+const MyGroupPage = lazy(() => import("./pages/dashboard/my-group"));
+const AnalyticsPage = lazy(() => import("./pages/dashboard/analytics"));
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },

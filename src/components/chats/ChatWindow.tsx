@@ -1,17 +1,23 @@
-
-import { useState, useRef, useEffect, SetStateAction } from "react";
-import ChatHeader from "@/components/chats/ChatHeader";
-import SidebarHeader from "@/components/chats/SidebarHeader";
-import MessageInput from "@/components/chats/MessageInput";
-import ContactList from "@/components/chats/ContactList";
-import MessageList from "@/components/chats/MessageList";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  Suspense,
+  lazy,
+} from "react";
 import { contacts, currentUser, messagesData } from "@/utils/constant";
 import SearchBar from "./Searchbar";
+
+// Lazy-loaded components
+const ChatHeader = lazy(() => import("@/components/chats/ChatHeader"));
+const SidebarHeader = lazy(() => import("@/components/chats/SidebarHeader"));
+const MessageInput = lazy(() => import("@/components/chats/MessageInput"));
+const ContactList = lazy(() => import("@/components/chats/ContactList"));
+const MessageList = lazy(() => import("@/components/chats/MessageList"));
 
 // Main App Component
 export default function ChatWindow() {
   const [messages, setMessages] = useState(messagesData);
-
   const [newMessage, setNewMessage] = useState("");
   const [activeContact, setActiveContact] = useState(contacts[0]);
 
@@ -19,7 +25,6 @@ export default function ChatWindow() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Scroll to bottom when messages change
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
@@ -41,11 +46,7 @@ export default function ChatWindow() {
     setNewMessage("");
   };
 
-  const handleKeyPress = (e: {
-    key: string;
-    shiftKey: any;
-    preventDefault: () => void;
-  }) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
@@ -57,8 +58,6 @@ export default function ChatWindow() {
     if (!files || files.length === 0) return;
 
     const file = files[0];
-
-    // Create a blob URL for preview
     const preview = URL.createObjectURL(file);
 
     const newMsg = {
@@ -74,36 +73,36 @@ export default function ChatWindow() {
 
   return (
     <div className="flex gap-x-4 h-[90vh] bg-white rounded-2xl p-3">
-      {/* Left Sidebar */}
       <div className="lg:w-1/4 w-full bg-gray-50 rounded-2xl">
-        <SidebarHeader user={currentUser} />
-        <SearchBar />
-        <ContactList
-          contacts={contacts}
-          activeContact={activeContact}
-          setActiveContact={setActiveContact}
-        />
+        <Suspense fallback={<div className="p-4">Loading sidebar...</div>}>
+          <SidebarHeader user={currentUser} />
+          <SearchBar />
+          <ContactList
+            contacts={contacts}
+            activeContact={activeContact}
+            setActiveContact={setActiveContact}
+          />
+        </Suspense>
       </div>
 
-      {/* Main Chat Area */}
       <div className="w-3/4 flex flex-col bg-gray-50 rounded-2xl p-3">
-        <ChatHeader contact={activeContact} />
-        <div
-          ref={chatContainerRef}
-          className="flex-1 overflow-y-auto p-4 bg-gray-50"
-        >
-          <MessageList messages={messages} currentUser={currentUser} />
-        </div>
-        <MessageInput
-          value={newMessage}
-          onChange={(e: { target: { value: SetStateAction<string> } }) =>
-            setNewMessage(e.target.value)
-          }
-          onKeyPress={handleKeyPress}
-          onSend={handleSendMessage}
-          onFileUpload={handleFileUpload}
-          fileInputRef={fileInputRef}
-        />
+        <Suspense fallback={<div className="p-4">Loading chat...</div>}>
+          <ChatHeader contact={activeContact} />
+          <div
+            ref={chatContainerRef}
+            className="flex-1 overflow-y-auto p-4 bg-gray-50"
+          >
+            <MessageList messages={messages} currentUser={currentUser} />
+          </div>
+          <MessageInput
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
+            onSend={handleSendMessage}
+            onFileUpload={handleFileUpload}
+            fileInputRef={fileInputRef}
+          />
+        </Suspense>
       </div>
     </div>
   );

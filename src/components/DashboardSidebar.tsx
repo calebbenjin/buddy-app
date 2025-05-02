@@ -63,7 +63,7 @@ const DashboardSidebar = () => {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 h-screen bg-white border-transparent flex flex-col justify-between transform transition-transform duration-300 ${
+        className={`lg:sticky top-0 fixed inset-y-0 left-0 z-50 w-64 h-screen bg-white border-transparent flex flex-col justify-between transform transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 md:relative lg:flex`}
       >
